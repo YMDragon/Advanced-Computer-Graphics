@@ -37,7 +37,7 @@ protected:
     int height;
 };
 
-// TODO: Implement Perspective camera
+// ~~TODO~~: Implement Perspective camera
 // You can add new functions or variables whenever needed.
 class PerspectiveCamera : public Camera
 {
@@ -47,17 +47,19 @@ public:
                       const Vector3f &up, int imgW, int imgH, float angle) : Camera(center, direction, up, imgW, imgH)
     {
         // angle is in radian.
-        angle_per_pixel = angle / imgH;
-        R = Matrix3f(this->horizontal, -this->up, this->direction);
+        length = tan(angle / 2) / imgH * 2;
+        R = Matrix3f(this->horizontal, this->up, this->direction);
     }
 
     Ray generateRay(const Vector2f &point) override
     {
-        Vector2f p = (point + Vector2f(0.5, 0.5)) / Vector2f(width, imgH);
+        Vector2f p = (point + 0.5 * Vector2f(1 - width, 1 - height)) * length;
+        Vector3f P = Vector3f(p.x(), p.y(), 1);
+        return Ray(center, (R * P).normalized());
     }
 
 private:
-    float angle_per_pixel;
+    float length;
     Matrix3f R;
 };
 

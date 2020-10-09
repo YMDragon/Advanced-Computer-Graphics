@@ -35,7 +35,7 @@ public:
 			return false;
 		if (Vector3f::dot(Vector3f::cross(vertices[1] - P, vertices[2] - P), normal) < 0)
 			return false;
-		if (Vector3f::dot(Vector3f::cross(vertices[2] - P, vertices[1] - P), normal) < 0)
+		if (Vector3f::dot(Vector3f::cross(vertices[2] - P, vertices[0] - P), normal) < 0)
 			return false;
 		h.set(t, material, normal);
 		return true;

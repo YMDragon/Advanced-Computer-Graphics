@@ -22,16 +22,16 @@ public:
 
     bool intersect(const Ray &r, Hit &h, float tmin) override
     {
-        float OH = Vector3f::dot(r.getDirection(), (r.getOrigin() - center));
-        float CH = sqrt((r.getOrigin() - center).squaredLength() + OH * OH);
+        float OH = Vector3f::dot(r.getDirection(), center - r.getOrigin()) / r.getDirection().length();
+        float CH = sqrt((center - r.getOrigin()).squaredLength() - OH * OH);
         if (CH > radius)
             return false;
         float PH = sqrt(radius * radius - CH * CH);
-        float t = OH - PH;
+        float t = (OH - PH) / r.getDirection().length();
         if ((t > h.getT()) || (t < tmin))
             return false;
         Vector3f P = r.pointAtParameter(t);
-        h.set(t, material, (P - O).normalized());
+        h.set(t, material, (P - center).normalized());
         return true;
     }
 
