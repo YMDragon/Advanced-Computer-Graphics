@@ -53,7 +53,7 @@ public:
 
     Ray generateRay(const Vector2f &point) override
     {
-        Vector2f p = (point + 0.5 * Vector2f(1 - width, 1 - height)) * length;
+        Vector2f p = (point - 0.5 * Vector2f(width, height)) * length;
         Vector3f P = Vector3f(p.x(), p.y(), 1);
         return Ray(center, (R * P).normalized());
     }
