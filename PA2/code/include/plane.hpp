@@ -5,25 +5,34 @@
 #include <vecmath.h>
 #include <cmath>
 
-// TODO (PA2): Copy from PA1
+// ~~TODO~~ (PA2): Copy from PA1
 
-class Plane : public Object3D {
+class Plane : public Object3D
+{
 public:
-    Plane() {
+    Plane() = delete;
 
-    }
-
-    Plane(const Vector3f &normal, float d, Material *m) : Object3D(m) {
-
+    Plane(const Vector3f &normal, float d, Material *m) : Object3D(m)
+    {
+        norm = normal;
+        this->d = d;
     }
 
     ~Plane() override = default;
 
-    bool intersect(const Ray &r, Hit &h, float tmin) override {
-        return false;
+    bool intersect(const Ray &r, Hit &h, float tmin) override
+    {
+        float a = Vector3f::dot(norm, r.getDirection());
+        float b = d - Vector3f::dot(norm, r.getOrigin());
+        float t = b / a;
+        if ((t > h.getT()) || (t < tmin))
+            return false;
+        h.set(t, material, norm);
+        return true;
     }
 
-    void drawGL() override {
+    void drawGL() override
+    {
         Object3D::drawGL();
         Vector3f xAxis = Vector3f::RIGHT;
         Vector3f yAxis = Vector3f::cross(norm, xAxis);
@@ -44,9 +53,6 @@ public:
 protected:
     Vector3f norm;
     float d;
-
 };
 
 #endif //PLANE_H
-		
-
