@@ -6,27 +6,41 @@
 #include <cmath>
 #include <glut.h>
 
-// TODO (PA2): Copy from PA1
+// ~~TODO~~ (PA2): Copy from PA1
 
-class Sphere : public Object3D {
+class Sphere : public Object3D
+{
 public:
-    Sphere() {
-        // unit ball at the center
-    }
+    Sphere() = delete;
 
-    Sphere(const Vector3f &center, float radius, Material *material) : Object3D(material) {
-        //
+    Sphere(const Vector3f &center, float radius, Material *material) : Object3D(material)
+    {
+        this->center = center;
+        this->radius = radius;
     }
 
     ~Sphere() override = default;
 
-    bool intersect(const Ray &r, Hit &h, float tmin) override {
-        return false;
+    bool intersect(const Ray &r, Hit &h, float tmin) override
+    {
+        float OH = Vector3f::dot(r.getDirection(), center - r.getOrigin()) / r.getDirection().length();
+        float CH = sqrt((center - r.getOrigin()).squaredLength() - OH * OH);
+        if (CH > radius)
+            return false;
+        float PH = sqrt(radius * radius - CH * CH);
+        float t = (OH - PH) / r.getDirection().length();
+        if ((t > h.getT()) || (t < tmin))
+            return false;
+        Vector3f P = r.pointAtParameter(t);
+        h.set(t, material, (P - center).normalized());
+        return true;
     }
 
-    void drawGL() override {
+    void drawGL() override
+    {
         Object3D::drawGL();
-        glMatrixMode(GL_MODELVIEW); glPushMatrix();
+        glMatrixMode(GL_MODELVIEW);
+        glPushMatrix();
         glTranslatef(center.x(), center.y(), center.z());
         glutSolidSphere(radius, 80, 80);
         glPopMatrix();
@@ -35,8 +49,6 @@ public:
 protected:
     Vector3f center;
     float radius;
-
 };
-
 
 #endif

@@ -1,50 +1,54 @@
 #ifndef GROUP_H
 #define GROUP_H
 
-
 #include "object3d.hpp"
 #include "ray.hpp"
 #include "hit.hpp"
 #include <iostream>
 #include <vector>
 
-
-// TODO (PA2): Implement Group - copy from PA1
-class Group : public Object3D {
+// ~~TODO~~ (PA2): Implement Group - copy from PA1
+class Group : public Object3D
+{
 
 public:
+    Group() = delete;
 
-    Group() {
-
+    explicit Group(int num_objects)
+    {
+        V.resize(num_objects);
     }
 
-    explicit Group (int num_objects) {
-
+    ~Group() override
+    {
     }
 
-    ~Group() override {
-
+    bool intersect(const Ray &r, Hit &h, float tmin) override
+    {
+        bool res = false;
+        for (auto obj : V)
+            res |= obj->intersect(r, h, tmin);
+        return res;
     }
 
-    bool intersect(const Ray &r, Hit &h, float tmin) override {
-
+    void drawGL() override
+    {
+        for (auto obj : V)
+            obj->drawGL();
     }
 
-    void drawGL() override {
-
+    void addObject(int index, Object3D *obj)
+    {
+        V[index] = obj;
     }
 
-    void addObject(int index, Object3D *obj) {
-
-    }
-
-    int getGroupSize() {
-
+    int getGroupSize()
+    {
+        return V.size();
     }
 
 private:
-
+    std::vector<Object3D *> V;
 };
 
 #endif
-	
