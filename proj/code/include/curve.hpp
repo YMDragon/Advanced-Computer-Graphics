@@ -39,37 +39,6 @@ public:
     }
 
     virtual void discretize(int resolution, std::vector<CurvePoint> &data) = 0;
-
-    void drawGL() override
-    {
-        Object3D::drawGL();
-        glPushAttrib(GL_ALL_ATTRIB_BITS);
-        glDisable(GL_LIGHTING);
-        glColor3f(1, 1, 0);
-        glBegin(GL_LINE_STRIP);
-        for (auto &control : controls)
-        {
-            glVertex3fv(control);
-        }
-        glEnd();
-        glPointSize(4);
-        glBegin(GL_POINTS);
-        for (auto &control : controls)
-        {
-            glVertex3fv(control);
-        }
-        glEnd();
-        std::vector<CurvePoint> sampledPoints;
-        discretize(30, sampledPoints);
-        glColor3f(1, 1, 1);
-        glBegin(GL_LINE_STRIP);
-        for (auto &cp : sampledPoints)
-        {
-            glVertex3fv(cp.V);
-        }
-        glEnd();
-        glPopAttrib();
-    }
 };
 
 class BezierCurve : public Curve

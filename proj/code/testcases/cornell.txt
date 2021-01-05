@@ -38,36 +38,68 @@ Materials {
 }
 
 Group {
-    numObjects 8
+    numObjects 13
     MaterialIndex 0
-    Plane {
-        normal 1 0 0
-        offset 0
+    Triangle {
+        vertex0 0 0 0
+        vertex1 0 81.6 0
+        vertex2 0 81.6 500
+    }
+    Triangle {
+        vertex0 0 81.6 500
+        vertex1 0 0 500
+        vertex2 0 0 0
     }
     
     MaterialIndex 1
-    Plane {
-        normal -1 0 0
-        offset -99
+    Triangle {
+        vertex0 99 0 0
+        vertex1 99 0 500
+        vertex2 99 81.6 500
+    }
+    Triangle {
+        vertex0 99 81.6 500
+        vertex1 99 81.6 0
+        vertex2 99 0 0
     }
 
     MaterialIndex 2
-    Plane {
-        normal 0 0 1
-        offset 0
+    Triangle {
+        vertex0 0 0 0
+        vertex1 99 0 0
+        vertex2 99 81.6 0
     }
-    Plane {
-        normal 0 1 0
-        offset 0
+    Triangle {
+        vertex0 99 81.6 0
+        vertex1 0 81.6 0
+        vertex2 0 0 0
     }
-    Plane {
-        normal 0 -1 0
-        offset -81.6
+
+    Triangle {
+        vertex0 0 0 0
+        vertex1 0 0 500
+        vertex2 99 0 500
+    }
+    Triangle {
+        vertex0 99 0 500
+        vertex1 99 0 0
+        vertex2 0 0 0
+    }
+    
+    Triangle {
+        vertex0 0 81.6 0
+        vertex1 99 81.6 0
+        vertex2 99 81.6 500
+    }
+    Triangle {
+        vertex0 99 81.6 500
+        vertex1 0 81.6 500
+        vertex2 0 81.6 0
     }
 
     MaterialIndex 3
     Sphere {
-        center 27 16.5 47
+        center 47 16.5 47
         radius 16.5
     }
 

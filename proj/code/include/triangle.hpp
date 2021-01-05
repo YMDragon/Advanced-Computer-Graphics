@@ -17,10 +17,13 @@ public:
 	// a b c are three vertex positions of the triangle
 	Triangle(const Vector3f &a, const Vector3f &b, const Vector3f &c, Material *m) : Object3D(m)
 	{
-		this->vertices[0] = a;
-		this->vertices[1] = b;
-		this->vertices[2] = c;
-		this->normal = Vector3f::cross(b - a, c - a).normalized();
+		vertices[0] = a;
+		vertices[1] = b;
+		vertices[2] = c;
+		normal = Vector3f::cross(b - a, c - a).normalized();
+		box.update(vertices[0]);
+		box.update(vertices[1]);
+		box.update(vertices[2]);
 	}
 
 	bool intersect(const Ray &r, Hit &h, float tmin) override
@@ -42,6 +45,7 @@ public:
 		h.set(t, material, normal);
 		return true;
 	}
+
 	Vector3f normal;
 	Vector3f vertices[3];
 

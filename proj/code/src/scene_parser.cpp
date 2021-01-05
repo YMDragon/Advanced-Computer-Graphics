@@ -130,8 +130,21 @@ void SceneParser::parsePerspectiveCamera()
     assert(!strcmp(token, "height"));
     int height = readInt();
     getToken(token);
-    assert(!strcmp(token, "}"));
-    camera = new PerspectiveCamera(center, direction, up, width, height, angle_radians);
+    if (!strcmp(token, "focus"))
+    {
+        Vector3f focus = readVector3f();
+        getToken(token);
+        assert(!strcmp(token, "radius"));
+        float radius = readFloat();
+        getToken(token);
+        assert(!strcmp(token, "}"));
+        camera = new FocusCamera(center, direction, up, width, height, angle_radians, focus, radius);
+    }
+    else
+    {
+        assert(!strcmp(token, "}"));
+        camera = new PerspectiveCamera(center, direction, up, width, height, angle_radians);
+    }
 }
 
 void SceneParser::parseBackground()
@@ -334,6 +347,8 @@ Group *SceneParser::parseGroup()
     getToken(token);
     assert(!strcmp(token, "}"));
 
+    answer->buildKDTree();
+
     // return the group
     return answer;
 }
@@ -431,28 +446,28 @@ Transform *SceneParser::parseTransform()
         if (!strcmp(token, "Scale"))
         {
             Vector3f s = readVector3f();
-            matrix = matrix * Matrix4f::scaling(s[0], s[1], s[2]);
+            matrix = Matrix4f::scaling(s[0], s[1], s[2]) * matrix;
         }
         else if (!strcmp(token, "UniformScale"))
         {
             float s = readFloat();
-            matrix = matrix * Matrix4f::uniformScaling(s);
+            matrix = Matrix4f::uniformScaling(s) * matrix;
         }
         else if (!strcmp(token, "Translate"))
         {
-            matrix = matrix * Matrix4f::translation(readVector3f());
+            matrix = Matrix4f::translation(readVector3f()) * matrix;
         }
         else if (!strcmp(token, "XRotate"))
         {
-            matrix = matrix * Matrix4f::rotateX(DegreesToRadians(readFloat()));
+            matrix = Matrix4f::rotateX(DegreesToRadians(readFloat())) * matrix;
         }
         else if (!strcmp(token, "YRotate"))
         {
-            matrix = matrix * Matrix4f::rotateY(DegreesToRadians(readFloat()));
+            matrix = Matrix4f::rotateY(DegreesToRadians(readFloat())) * matrix;
         }
         else if (!strcmp(token, "ZRotate"))
         {
-            matrix = matrix * Matrix4f::rotateZ(DegreesToRadians(readFloat()));
+            matrix = Matrix4f::rotateZ(DegreesToRadians(readFloat())) * matrix;
         }
         else if (!strcmp(token, "Rotate"))
         {
@@ -461,7 +476,7 @@ Transform *SceneParser::parseTransform()
             Vector3f axis = readVector3f();
             float degrees = readFloat();
             float radians = DegreesToRadians(degrees);
-            matrix = matrix * Matrix4f::rotation(axis, radians);
+            matrix = Matrix4f::rotation(axis, radians) * matrix;
             getToken(token);
             assert(!strcmp(token, "}"));
         }

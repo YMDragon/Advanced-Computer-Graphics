@@ -24,7 +24,11 @@ public:
 
     Transform(const Matrix4f &m, Object3D *obj) : o(obj)
     {
-        transform = m.inverse();
+        transformIn = m.inverse();
+        transformOut = m;
+        BoundingBox trBox = o->getBoundingBox();
+        for (int i = 0; i < 8; i++)
+            box.update(transformPoint(transformOut, trBox.getVertex(i)));
     }
 
     ~Transform()
@@ -33,20 +37,20 @@ public:
 
     virtual bool intersect(const Ray &r, Hit &h, float tmin)
     {
-        Vector3f trSource = transformPoint(transform, r.getOrigin());
-        Vector3f trDirection = transformDirection(transform, r.getDirection());
+        Vector3f trSource = transformPoint(transformIn, r.getOrigin());
+        Vector3f trDirection = transformDirection(transformIn, r.getDirection());
         Ray tr(trSource, trDirection);
         bool inter = o->intersect(tr, h, tmin);
         if (inter)
         {
-            h.set(h.getT(), h.getMaterial(), transformDirection(transform.transposed(), h.getNormal()).normalized());
+            h.set(h.getT(), h.getMaterial(), transformDirection(transformOut, h.getNormal()).normalized());
         }
         return inter;
     }
 
 protected:
     Object3D *o; //un-transformed object
-    Matrix4f transform;
+    Matrix4f transformIn, transformOut;
 };
 
 #endif //TRANSFORM_H

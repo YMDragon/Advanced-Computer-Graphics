@@ -17,6 +17,8 @@ public:
     {
         this->center = center;
         this->radius = radius;
+        box.update(center + Vector3f(radius));
+        box.update(center - Vector3f(radius));
     }
 
     ~Sphere() override = default;

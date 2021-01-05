@@ -16,8 +16,16 @@ public:
 
     Plane(const Vector3f &normal, float d, Material *m) : Object3D(m)
     {
-        this->normal = normal;
+        this->normal = normal.normalized();
         this->d = d;
+        if (fabs(normal.x()) == 1)
+            box = BoundingBox(d, d, -1e20, 1e20, -1e20, 1e20);
+        else if (fabs(normal.y()) == 1)
+            box = BoundingBox(-1e20, 1e20, d, d, -1e20, 1e20);
+        else if (fabs(normal.z()) == 1)
+            box = BoundingBox(-1e20, 1e20, -1e20, 1e20, d, d);
+        else
+            box = BoundingBox(-1e20, 1e20, -1e20, 1e20, -1e20, 1e20);
     }
 
     ~Plane() override = default;

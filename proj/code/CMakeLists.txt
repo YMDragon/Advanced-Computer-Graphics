@@ -9,6 +9,7 @@ ADD_SUBDIRECTORY(deps/vecmath)
 
 SET(PROJECT_SOURCES
         src/image.cpp
+        src/kdtree.cpp
         src/main.cpp
         src/mesh.cpp
         src/scene_parser.cpp)
@@ -19,11 +20,13 @@ SET(PROJECT_INCLUDES
         include/group.hpp
         include/hit.hpp
         include/image.hpp
+        include/kdtree.hpp
         include/material.hpp
         include/mesh.hpp
         include/object3d.hpp
         include/plane.hpp
         include/ray.hpp
+        include/sample.hpp
         include/scene_parser.hpp
         include/sphere.hpp
         include/transform.hpp
