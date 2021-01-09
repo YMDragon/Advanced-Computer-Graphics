@@ -13,7 +13,7 @@ class Sphere : public Object3D
 public:
     Sphere() = delete;
 
-    Sphere(const Vector3f &center, float radius, Material *material) : Object3D(material)
+    Sphere(const Vector3f &center, double radius, Material *material) : Object3D(material)
     {
         this->center = center;
         this->radius = radius;
@@ -23,26 +23,26 @@ public:
 
     ~Sphere() override = default;
 
-    bool intersect(const Ray &r, Hit &h, float tmin) override
+    bool intersect(const Ray &r, Hit &h, double tmin) override
     {
-        float OH = Vector3f::dot(r.getDirection(), center - r.getOrigin()) / r.getDirection().length();
-        float CH = sqrt(std::max((float)0, (center - r.getOrigin()).squaredLength() - OH * OH));
+        double OH = Vector3f::dot(r.getDirection(), center - r.getOrigin()) / r.getDirection().length();
+        double CH = sqrt(std::max((double)0, (center - r.getOrigin()).squaredLength() - OH * OH));
         if (CH > radius)
             return false;
-        float PH = sqrt(std::max((float)0, radius * radius - CH * CH));
-        float t = (OH - PH) / r.getDirection().length();
+        double PH = sqrt(std::max((double)0, radius * radius - CH * CH));
+        double t = (OH - PH) / r.getDirection().length();
         if (t < tmin)
             t = (OH + PH) / r.getDirection().length();
         if ((t > h.getT()) || (t < tmin))
             return false;
-        Vector3f P = r.pointAtParameter(t);
-        h.set(t, material, (P - center).normalized());
+        Vector3f P = (r.pointAtParameter(t) - center).normalized();
+        h.set(t, material, P, Vector2f(atan2(P.y(), P.x()) / M_PI / 2 + 0.5, acos(P.z()) / M_PI));
         return true;
     }
 
 protected:
     Vector3f center;
-    float radius;
+    double radius;
 };
 
 #endif

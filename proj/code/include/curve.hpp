@@ -28,7 +28,7 @@ protected:
 public:
     explicit Curve(std::vector<Vector3f> points) : controls(std::move(points)) {}
 
-    bool intersect(const Ray &r, Hit &h, float tmin) override
+    bool intersect(const Ray &r, Hit &h, double tmin) override
     {
         return false;
     }

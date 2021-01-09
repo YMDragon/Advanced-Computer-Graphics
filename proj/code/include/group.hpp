@@ -24,7 +24,7 @@ public:
     {
     }
 
-    bool intersect(const Ray &r, Hit &h, float tmin) override
+    bool intersect(const Ray &r, Hit &h, double tmin) override
     {
         if (V.size() <= 20)
         {

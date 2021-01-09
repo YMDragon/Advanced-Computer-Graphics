@@ -46,7 +46,7 @@ class PerspectiveCamera : public Camera
 
 public:
     PerspectiveCamera(const Vector3f &center, const Vector3f &direction,
-                      const Vector3f &up, int imgW, int imgH, float angle) : Camera(center, direction, up, imgW, imgH)
+                      const Vector3f &up, int imgW, int imgH, double angle) : Camera(center, direction, up, imgW, imgH)
     {
         // angle is in radian.
         length = tan(angle / 2) / imgH * 2;
@@ -66,7 +66,7 @@ public:
     }
 
 private:
-    float length;
+    double length;
     Matrix3f R;
 };
 
@@ -74,8 +74,8 @@ class FocusCamera : public Camera
 {
 public:
     FocusCamera(const Vector3f &center, const Vector3f &direction,
-                const Vector3f &up, int imgW, int imgH, float angle,
-                const Vector3f &focus, float radius) : Camera(center, direction, up, imgW, imgH)
+                const Vector3f &up, int imgW, int imgH, double angle,
+                const Vector3f &focus, double radius) : Camera(center, direction, up, imgW, imgH)
     {
         // angle is in radian.
         length = tan(angle / 2) / imgH * 2;
@@ -100,10 +100,10 @@ public:
     }
 
 private:
-    float length;
+    double length;
     Matrix3f R;
-    float focusLength;
-    float radius;
+    double focusLength;
+    double radius;
 };
 
 #endif //CAMERA_H

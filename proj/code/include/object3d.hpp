@@ -13,7 +13,7 @@ class BoundingBox
 public:
     BoundingBox() : x_min(1e20), x_max(-1e20), y_min(1e20), y_max(-1e20), z_min(1e20), z_max(-1e20) {}
 
-    BoundingBox(float x_min, float x_max, float y_min, float y_max, float z_min, float z_max) : x_min(x_min), x_max(x_max), y_min(y_min), y_max(y_max), z_min(z_min), z_max(z_max) {}
+    BoundingBox(double x_min, double x_max, double y_min, double y_max, double z_min, double z_max) : x_min(x_min), x_max(x_max), y_min(y_min), y_max(y_max), z_min(z_min), z_max(z_max) {}
 
     BoundingBox(const BoundingBox &box)
     {
@@ -53,7 +53,7 @@ public:
     }
 
 private:
-    float x_min,
+    double x_min,
         x_max,
         y_min,
         y_max,
@@ -75,7 +75,7 @@ public:
     }
 
     // Intersect Ray with this object. If hit, store information in hit structure.
-    virtual bool intersect(const Ray &r, Hit &h, float tmin) = 0;
+    virtual bool intersect(const Ray &r, Hit &h, double tmin) = 0;
 
     BoundingBox getBoundingBox()
     {

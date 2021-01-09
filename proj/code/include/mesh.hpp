@@ -28,9 +28,11 @@ public:
     };
 
     std::vector<Vector3f> v;
-    std::vector<TriangleIndex> t;
+    std::vector<Vector2f> vt;
+    std::vector<TriangleIndex> f;
+    std::vector<TriangleIndex> ft;
     std::vector<Object3D *> V;
-    bool intersect(const Ray &r, Hit &h, float tmin) override;
+    bool intersect(const Ray &r, Hit &h, double tmin) override;
 
 private:
     KDTree *rt;

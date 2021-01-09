@@ -10,7 +10,7 @@ public:
     KDTree() = delete;
     KDTree(std::vector<Object3D *> &V, int l, int r, int type);
 
-    bool intersect(const Ray &r, Hit &h, float tmin) override;
+    bool intersect(const Ray &r, Hit &h, double tmin) override;
 
 private:
     Object3D *o;

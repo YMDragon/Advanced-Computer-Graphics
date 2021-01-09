@@ -1,0 +1,150 @@
+PerspectiveCamera {
+    center 50 44 210
+    direction 0 0 -1
+    up 0 1 0
+    angle 45
+    width 1024
+    height 768
+    focus 20 10 85
+    radius 1
+}
+
+Background {
+    color 0 0 0 
+}
+
+Materials {
+    numMaterials 8
+    Material {
+        color 0.75 0.75 0.75
+    }
+    Material {
+        color 0.75 0.25 0.25
+    }
+    Material {
+        color 0.25 0.75 0.25
+    }
+    Material {
+        color 0.25 0.25 0.75
+    }
+    Material {
+        color 0.75 0.75 0.75
+        type MIX
+        rate 0.5
+    }
+    Material { 
+        color 0.999 0.999 0.999 
+        type SPEC
+    }
+    Material { 
+        color 0.999 0.999 0.999 
+        type REFR
+        rate 1.5
+    }
+    Material {
+        color 0 0 0
+        emission 12 12 12
+    }
+}
+
+Group {
+    numObjects 16
+    MaterialIndex 1
+    Triangle {
+        vertex0 0 0 0
+        vertex1 0 81.6 0
+        vertex2 0 81.6 500
+    }
+    Triangle {
+        vertex0 0 81.6 500
+        vertex1 0 0 500
+        vertex2 0 0 0
+    }
+    
+    MaterialIndex 3
+    Triangle {
+        vertex0 99 0 0
+        vertex1 99 0 500
+        vertex2 99 81.6 500
+    }
+    Triangle {
+        vertex0 99 81.6 500
+        vertex1 99 81.6 0
+        vertex2 99 0 0
+    }
+
+    MaterialIndex 2
+    Triangle {
+        vertex0 0 0 0
+        vertex1 99 0 0
+        vertex2 99 81.6 0
+    }
+    Triangle {
+        vertex0 99 81.6 0
+        vertex1 0 81.6 0
+        vertex2 0 0 0
+    }
+
+    MaterialIndex 4
+    Triangle {
+        vertex0 0 0 0
+        vertex1 0 0 250
+        vertex2 99 0 250
+    }
+    Triangle {
+        vertex0 99 0 250
+        vertex1 99 0 0
+        vertex2 0 0 0
+    }
+    
+    MaterialIndex 0
+    Triangle {
+        vertex0 0 81.6 0
+        vertex1 99 81.6 0
+        vertex2 99 81.6 250
+    }
+    Triangle {
+        vertex0 99 81.6 250
+        vertex1 0 81.6 250
+        vertex2 0 81.6 0
+    }
+
+    MaterialIndex 0
+    Triangle {
+        vertex0 0 0 250
+        vertex1 0 81.6 250
+        vertex2 99 81.6 250
+    }
+    Triangle {
+        vertex0 99 81.6 250
+        vertex1 99 0 250
+        vertex2 0 0 250
+    }
+
+    MaterialIndex 5
+    Sphere {
+        center 47 16.5 47
+        radius 16.5
+    }
+
+    MaterialIndex 6
+    Sphere {
+        center 73 16.5 60
+        radius 16.5
+    }
+
+    MaterialIndex 6
+    Transform {
+        UniformScale 15
+		Translate 20 10 85
+        TriangleMesh {
+            obj_file mesh/fixed.perfect.dragon.100K.0.07.obj
+        }
+    }
+
+    MaterialIndex 7
+    Sphere {
+        center 50 681.33 81.6
+        radius 600
+    }
+}

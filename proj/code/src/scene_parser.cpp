@@ -121,8 +121,8 @@ void SceneParser::parsePerspectiveCamera()
     Vector3f up = readVector3f();
     getToken(token);
     assert(!strcmp(token, "angle"));
-    float angle_degrees = readFloat();
-    float angle_radians = DegreesToRadians(angle_degrees);
+    double angle_degrees = readdouble();
+    double angle_radians = DegreesToRadians(angle_degrees);
     getToken(token);
     assert(!strcmp(token, "width"));
     int width = readInt();
@@ -135,7 +135,7 @@ void SceneParser::parsePerspectiveCamera()
         Vector3f focus = readVector3f();
         getToken(token);
         assert(!strcmp(token, "radius"));
-        float radius = readFloat();
+        double radius = readdouble();
         getToken(token);
         assert(!strcmp(token, "}"));
         camera = new FocusCamera(center, direction, up, width, height, angle_radians, focus, radius);
@@ -213,7 +213,7 @@ Material *SceneParser::parseMaterial()
     filename[0] = 0;
     Type type = DIFF;
     Vector3f color(1, 1, 1), emission(0, 0, 0);
-    float reflect = 0, refrect = 0, refractIndex = 1;
+    double reflect = 0, refrect = 0, rate = 1;
     getToken(token);
     assert(!strcmp(token, "{"));
     while (true)
@@ -228,6 +228,8 @@ Material *SceneParser::parseMaterial()
                 type = SPEC;
             else if (strcmp(token, "REFR") == 0)
                 type = REFR;
+            else if (strcmp(token, "MIX") == 0)
+                type = MIX;
             else
             {
                 printf("Unknown type in parseMaterial: '%s'\n", token);
@@ -242,13 +244,12 @@ Material *SceneParser::parseMaterial()
         {
             emission = readVector3f();
         }
-        else if (strcmp(token, "refractIndex") == 0)
+        else if (strcmp(token, "rate") == 0)
         {
-            refractIndex = readFloat();
+            rate = readdouble();
         }
         else if (strcmp(token, "texture") == 0)
         {
-            // Optional: read in texture and draw it.
             getToken(filename);
         }
         else
@@ -257,7 +258,7 @@ Material *SceneParser::parseMaterial()
             break;
         }
     }
-    auto *answer = new Material(type, color, emission, refractIndex);
+    auto *answer = new Material(type, filename, color, emission, rate);
     return answer;
 }
 
@@ -366,7 +367,7 @@ Sphere *SceneParser::parseSphere()
     Vector3f center = readVector3f();
     getToken(token);
     assert(!strcmp(token, "radius"));
-    float radius = readFloat();
+    double radius = readdouble();
     getToken(token);
     assert(!strcmp(token, "}"));
     assert(current_material != nullptr);
@@ -383,7 +384,7 @@ Plane *SceneParser::parsePlane()
     Vector3f normal = readVector3f();
     getToken(token);
     assert(!strcmp(token, "offset"));
-    float offset = readFloat();
+    double offset = readdouble();
     getToken(token);
     assert(!strcmp(token, "}"));
     assert(current_material != nullptr);
@@ -405,9 +406,26 @@ Triangle *SceneParser::parseTriangle()
     assert(!strcmp(token, "vertex2"));
     Vector3f v2 = readVector3f();
     getToken(token);
-    assert(!strcmp(token, "}"));
-    assert(current_material != nullptr);
-    return new Triangle(v0, v1, v2, current_material);
+    if (!strcmp(token, "texture0"))
+    {
+        Vector2f t0 = readVector2f();
+        getToken(token);
+        assert(!strcmp(token, "texture1"));
+        Vector2f t1 = readVector2f();
+        getToken(token);
+        assert(!strcmp(token, "texture2"));
+        Vector2f t2 = readVector2f();
+        getToken(token);
+        assert(!strcmp(token, "}"));
+        assert(current_material != nullptr);
+        return new Triangle(v0, v1, v2, t0, t1, t2, current_material);
+    }
+    else
+    {
+        assert(!strcmp(token, "}"));
+        assert(current_material != nullptr);
+        return new Triangle(v0, v1, v2, current_material);
+    }
 }
 
 Mesh *SceneParser::parseTriangleMesh()
@@ -450,7 +468,7 @@ Transform *SceneParser::parseTransform()
         }
         else if (!strcmp(token, "UniformScale"))
         {
-            float s = readFloat();
+            double s = readdouble();
             matrix = Matrix4f::uniformScaling(s) * matrix;
         }
         else if (!strcmp(token, "Translate"))
@@ -459,23 +477,23 @@ Transform *SceneParser::parseTransform()
         }
         else if (!strcmp(token, "XRotate"))
         {
-            matrix = Matrix4f::rotateX(DegreesToRadians(readFloat())) * matrix;
+            matrix = Matrix4f::rotateX(DegreesToRadians(readdouble())) * matrix;
         }
         else if (!strcmp(token, "YRotate"))
         {
-            matrix = Matrix4f::rotateY(DegreesToRadians(readFloat())) * matrix;
+            matrix = Matrix4f::rotateY(DegreesToRadians(readdouble())) * matrix;
         }
         else if (!strcmp(token, "ZRotate"))
         {
-            matrix = Matrix4f::rotateZ(DegreesToRadians(readFloat())) * matrix;
+            matrix = Matrix4f::rotateZ(DegreesToRadians(readdouble())) * matrix;
         }
         else if (!strcmp(token, "Rotate"))
         {
             getToken(token);
             assert(!strcmp(token, "{"));
             Vector3f axis = readVector3f();
-            float degrees = readFloat();
-            float radians = DegreesToRadians(degrees);
+            double degrees = readdouble();
+            double radians = DegreesToRadians(degrees);
             matrix = Matrix4f::rotation(axis, radians) * matrix;
             getToken(token);
             assert(!strcmp(token, "}"));
@@ -489,7 +507,7 @@ Transform *SceneParser::parseTransform()
             {
                 for (int i = 0; i < 4; i++)
                 {
-                    float v = readFloat();
+                    double v = readdouble();
                     matrix2(i, j) = v;
                 }
             }
@@ -529,25 +547,37 @@ int SceneParser::getToken(char token[MAX_PARSER_TOKEN_LENGTH])
     return 1;
 }
 
+Vector2f SceneParser::readVector2f()
+{
+    double x, y;
+    int count = fscanf(file, "%lf %lf", &x, &y);
+    if (count != 2)
+    {
+        printf("Error trying to read 2 doubles to make a Vector2f\n");
+        assert(0);
+    }
+    return Vector2f(x, y);
+}
+
 Vector3f SceneParser::readVector3f()
 {
-    float x, y, z;
-    int count = fscanf(file, "%f %f %f", &x, &y, &z);
+    double x, y, z;
+    int count = fscanf(file, "%lf %lf %lf", &x, &y, &z);
     if (count != 3)
     {
-        printf("Error trying to read 3 floats to make a Vector3f\n");
+        printf("Error trying to read 3 doubles to make a Vector3f\n");
         assert(0);
     }
     return Vector3f(x, y, z);
 }
 
-float SceneParser::readFloat()
+double SceneParser::readdouble()
 {
-    float answer;
-    int count = fscanf(file, "%f", &answer);
+    double answer;
+    int count = fscanf(file, "%lf", &answer);
     if (count != 1)
     {
-        printf("Error trying to read 1 float\n");
+        printf("Error trying to read 1 double\n");
         assert(0);
     }
     return answer;

@@ -7,40 +7,39 @@ class Vector3f;
 class Vector4f
 {
 public:
+	Vector4f(double f = 0.f);
+	Vector4f(double fx, double fy, double fz, double fw);
+	Vector4f(double buffer[4]);
 
-	Vector4f( float f = 0.f );
-	Vector4f( float fx, float fy, float fz, float fw );
-	Vector4f( float buffer[ 4 ] );
+	Vector4f(const Vector2f &xy, double z, double w);
+	Vector4f(double x, const Vector2f &yz, double w);
+	Vector4f(double x, double y, const Vector2f &zw);
+	Vector4f(const Vector2f &xy, const Vector2f &zw);
 
-	Vector4f( const Vector2f& xy, float z, float w );
-	Vector4f( float x, const Vector2f& yz, float w );
-	Vector4f( float x, float y, const Vector2f& zw );
-	Vector4f( const Vector2f& xy, const Vector2f& zw );
-
-	Vector4f( const Vector3f& xyz, float w );
-	Vector4f( float x, const Vector3f& yzw );
+	Vector4f(const Vector3f &xyz, double w);
+	Vector4f(double x, const Vector3f &yzw);
 
 	// copy constructors
-	Vector4f( const Vector4f& rv );
+	Vector4f(const Vector4f &rv);
 
 	// assignment operators
-	Vector4f& operator = ( const Vector4f& rv );
+	Vector4f &operator=(const Vector4f &rv);
 
 	// no destructor necessary
 
 	// returns the ith element
-	const float& operator [] ( int i ) const;
-	float& operator [] ( int i );
+	const double &operator[](int i) const;
+	double &operator[](int i);
 
-	float& x();
-	float& y();
-	float& z();
-	float& w();
+	double &x();
+	double &y();
+	double &z();
+	double &w();
 
-	float x() const;
-	float y() const;
-	float z() const;
-	float w() const;
+	double x() const;
+	double y() const;
+	double z() const;
+	double w() const;
 
 	Vector2f xy() const;
 	Vector2f yz() const;
@@ -57,8 +56,8 @@ public:
 	Vector3f zwy() const;
 	Vector3f wxz() const;
 
-	float abs() const;
-	float absSquared() const;
+	double abs() const;
+	double absSquared() const;
 	void normalize();
 	Vector4f normalized() const;
 
@@ -69,34 +68,32 @@ public:
 	void negate();
 
 	// ---- Utility ----
-	operator const float* () const; // automatic type conversion for OpenGL
-	operator float* (); // automatic type conversion for OpenG
-	void print() const; 
+	operator const double *() const; // automatic type conversion for OpenGL
+	operator double *();			 // automatic type conversion for OpenG
+	void print() const;
 
-	static float dot( const Vector4f& v0, const Vector4f& v1 );
-	static Vector4f lerp( const Vector4f& v0, const Vector4f& v1, float alpha );
+	static double dot(const Vector4f &v0, const Vector4f &v1);
+	static Vector4f lerp(const Vector4f &v0, const Vector4f &v1, double alpha);
 
 private:
-
-	float m_elements[ 4 ];
-
+	double m_elements[4];
 };
 
 // component-wise operators
-Vector4f operator + ( const Vector4f& v0, const Vector4f& v1 );
-Vector4f operator - ( const Vector4f& v0, const Vector4f& v1 );
-Vector4f operator * ( const Vector4f& v0, const Vector4f& v1 );
-Vector4f operator / ( const Vector4f& v0, const Vector4f& v1 );
+Vector4f operator+(const Vector4f &v0, const Vector4f &v1);
+Vector4f operator-(const Vector4f &v0, const Vector4f &v1);
+Vector4f operator*(const Vector4f &v0, const Vector4f &v1);
+Vector4f operator/(const Vector4f &v0, const Vector4f &v1);
 
 // unary negation
-Vector4f operator - ( const Vector4f& v );
+Vector4f operator-(const Vector4f &v);
 
 // multiply and divide by scalar
-Vector4f operator * ( float f, const Vector4f& v );
-Vector4f operator * ( const Vector4f& v, float f );
-Vector4f operator / ( const Vector4f& v, float f );
+Vector4f operator*(double f, const Vector4f &v);
+Vector4f operator*(const Vector4f &v, double f);
+Vector4f operator/(const Vector4f &v, double f);
 
-bool operator == ( const Vector4f& v0, const Vector4f& v1 );
-bool operator != ( const Vector4f& v0, const Vector4f& v1 );
+bool operator==(const Vector4f &v0, const Vector4f &v1);
+bool operator!=(const Vector4f &v0, const Vector4f &v1);
 
 #endif // VECTOR_4F_H

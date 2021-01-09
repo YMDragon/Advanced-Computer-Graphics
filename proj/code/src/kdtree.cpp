@@ -16,7 +16,7 @@ bool cmp_z(Object3D *a, Object3D *b)
     return a->getBoundingBox().getVertex().z() < b->getBoundingBox().getVertex().z();
 }
 
-void update(float &t_min, float &t_max, float t0, float t1)
+void update(double &t_min, double &t_max, double t0, double t1)
 {
     if (t0 > t1)
         std::swap(t0, t1);
@@ -47,9 +47,9 @@ KDTree::KDTree(std::vector<Object3D *> &V, int l, int r, int type)
     }
 }
 
-bool KDTree::intersect(const Ray &r, Hit &h, float tmin)
+bool KDTree::intersect(const Ray &r, Hit &h, double tmin)
 {
-    float t_min = tmin, t_max = h.getT();
+    double t_min = tmin, t_max = h.getT();
     Vector3f a = (box.getVertex(0) - r.getOrigin()) / r.getDirection();
     Vector3f b = (box.getVertex(7) - r.getOrigin()) / r.getDirection();
     update(t_min, t_max, a.x(), b.x());

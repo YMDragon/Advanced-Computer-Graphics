@@ -17,46 +17,52 @@ class Mesh;
 
 #define MAX_PARSER_TOKEN_LENGTH 1024
 
-class SceneParser {
+class SceneParser
+{
 public:
-
     SceneParser() = delete;
     SceneParser(const char *filename);
 
     ~SceneParser();
 
-    Camera *getCamera() const {
+    Camera *getCamera() const
+    {
         return camera;
     }
 
-    Vector3f getBackgroundColor() const {
+    Vector3f getBackgroundColor() const
+    {
         return background_color;
     }
 
-    int getNumLights() const {
+    int getNumLights() const
+    {
         return num_lights;
     }
 
-    Light *getLight(int i) const {
+    Light *getLight(int i) const
+    {
         assert(i >= 0 && i < num_lights);
         return lights[i];
     }
 
-    int getNumMaterials() const {
+    int getNumMaterials() const
+    {
         return num_materials;
     }
 
-    Material *getMaterial(int i) const {
+    Material *getMaterial(int i) const
+    {
         assert(i >= 0 && i < num_materials);
         return materials[i];
     }
 
-    Group *getGroup() const {
+    Group *getGroup() const
+    {
         return group;
     }
 
 private:
-
     void parseFile();
     void parsePerspectiveCamera();
     void parseBackground();
@@ -75,9 +81,10 @@ private:
 
     int getToken(char token[MAX_PARSER_TOKEN_LENGTH]);
 
+    Vector2f readVector2f();
     Vector3f readVector3f();
 
-    float readFloat();
+    double readdouble();
     int readInt();
 
     FILE *file;

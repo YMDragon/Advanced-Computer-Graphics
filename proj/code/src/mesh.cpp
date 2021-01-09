@@ -6,7 +6,7 @@
 #include <utility>
 #include <sstream>
 
-bool Mesh::intersect(const Ray &r, Hit &h, float tmin)
+bool Mesh::intersect(const Ray &r, Hit &h, double tmin)
 {
     if (V.size() <= 0)
     {
@@ -23,9 +23,9 @@ Mesh::Mesh(const char *filename, Material *material) : Object3D(material)
 {
 
     // Optional: Use tiny obj loader to replace this simple one.
-    std::ifstream f;
-    f.open(filename);
-    if (!f.is_open())
+    std::ifstream file;
+    file.open(filename);
+    if (!file.is_open())
     {
         std::cout << "Cannot open " << filename << "\n";
         return;
@@ -36,11 +36,10 @@ Mesh::Mesh(const char *filename, Material *material) : Object3D(material)
     std::string texTok("vt");
     char bslash = '/', space = ' ';
     std::string tok;
-    int texID;
     while (true)
     {
-        std::getline(f, line);
-        if (f.eof())
+        std::getline(file, line);
+        if (file.eof())
         {
             break;
         }
@@ -68,13 +67,15 @@ Mesh::Mesh(const char *filename, Material *material) : Object3D(material)
                 std::replace(line.begin(), line.end(), bslash, space);
                 std::stringstream facess(line);
                 TriangleIndex trig;
+                TriangleIndex texID;
                 facess >> tok;
                 for (int ii = 0; ii < 3; ii++)
                 {
-                    facess >> trig[ii] >> texID;
+                    facess >> trig[ii] >> texID[ii];
                     trig[ii]--;
                 }
-                t.push_back(trig);
+                f.push_back(trig);
+                ft.push_back(texID);
             }
             else
             {
@@ -84,7 +85,7 @@ Mesh::Mesh(const char *filename, Material *material) : Object3D(material)
                     ss >> trig[ii];
                     trig[ii]--;
                 }
-                t.push_back(trig);
+                f.push_back(trig);
             }
         }
         else if (tok == texTok)
@@ -92,17 +93,25 @@ Mesh::Mesh(const char *filename, Material *material) : Object3D(material)
             Vector2f texcoord;
             ss >> texcoord[0];
             ss >> texcoord[1];
+            vt.push_back(texcoord);
         }
     }
 
-    f.close();
+    file.close();
 
-    V.resize(t.size());
-    for (int triId = 0; triId < (int)t.size(); ++triId)
-    {
-        TriangleIndex &triIndex = t[triId];
-        V[triId] = new Triangle(v[triIndex[0]], v[triIndex[1]], v[triIndex[2]], material);
-    }
+    V.resize(f.size());
+    for (int triId = 0; triId < (int)f.size(); ++triId)
+        if (ft.size() == f.size())
+        {
+            TriangleIndex &triIndex = f[triId];
+            TriangleIndex &texIndex = ft[triId];
+            V[triId] = new Triangle(v[triIndex[0]], v[triIndex[1]], v[triIndex[2]], vt[texIndex[0]], vt[texIndex[1]], vt[texIndex[2]], material);
+        }
+        else
+        {
+            TriangleIndex &triIndex = f[triId];
+            V[triId] = new Triangle(v[triIndex[0]], v[triIndex[1]], v[triIndex[2]], material);
+        }
 
     rt = new KDTree(V, 0, (int)V.size(), 0);
 }

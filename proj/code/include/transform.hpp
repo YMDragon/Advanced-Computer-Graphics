@@ -35,7 +35,7 @@ public:
     {
     }
 
-    virtual bool intersect(const Ray &r, Hit &h, float tmin)
+    virtual bool intersect(const Ray &r, Hit &h, double tmin)
     {
         Vector3f trSource = transformPoint(transformIn, r.getOrigin());
         Vector3f trDirection = transformDirection(transformIn, r.getDirection());
@@ -43,7 +43,7 @@ public:
         bool inter = o->intersect(tr, h, tmin);
         if (inter)
         {
-            h.set(h.getT(), h.getMaterial(), transformDirection(transformOut, h.getNormal()).normalized());
+            h.set(h.getT(), h.getMaterial(), transformDirection(transformOut, h.getNormal()).normalized(), h.getTexture());
         }
         return inter;
     }
