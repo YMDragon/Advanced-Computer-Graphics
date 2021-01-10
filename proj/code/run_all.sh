@@ -12,3 +12,7 @@ fi
 cd build
 make -j
 cd ..
+
+# Run all testcases. 
+mkdir -p output
+bin/PROJECT testcases/final.txt output/final.bmp
