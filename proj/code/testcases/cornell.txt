@@ -29,7 +29,7 @@ Materials {
     Material { 
         color 0.999 0.999 0.999 
         type REFR
-        refractIndex 1.5
+        rate 1.5
     }
     Material {
         color 0 0 0

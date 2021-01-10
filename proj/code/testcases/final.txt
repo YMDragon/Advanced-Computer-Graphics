@@ -3,10 +3,10 @@ PerspectiveCamera {
     direction 0 0 -1
     up 0 1 0
     angle 45
-    width 1024
-    height 768
-    focus 20 10 85
-    radius 1
+    width 1600
+    height 1200
+    focus 47.5 10 75
+    radius 1.5
 }
 
 Background {
@@ -14,7 +14,7 @@ Background {
 }
 
 Materials {
-    numMaterials 8
+    numMaterials 13
     Material {
         color 0.75 0.75 0.75
     }
@@ -28,9 +28,9 @@ Materials {
         color 0.25 0.25 0.75
     }
     Material {
-        color 0.75 0.75 0.75
+        color 0.7 0.7 0.7
         type MIX
-        rate 0.5
+        rate 0.8
     }
     Material { 
         color 0.999 0.999 0.999 
@@ -42,47 +42,76 @@ Materials {
         rate 1.5
     }
     Material {
+        texture texture/vase.ppm
+        type MIX
+        rate 0.75
+    }
+    Material {
         color 0 0 0
-        emission 12 12 12
+        emission 15 15 15
+    }
+    Material {
+        color 0.75 0.75 0.25
+        type REFR
+        rate 1.5
+    }
+    Material {
+        color 0.75 0.25 0.75
+        type REFR
+        rate 1.5
+    }
+    Material {
+        color 0.25 0.75 0.75
+        type REFR
+        rate 1.5
+    }
+    Material {
+        texture texture/2ciyuan.ppm
     }
 }
 
 Group {
-    numObjects 16
+    numObjects 21
     MaterialIndex 1
     Triangle {
         vertex0 0 0 0
         vertex1 0 81.6 0
-        vertex2 0 81.6 500
+        vertex2 0 81.6 250
     }
     Triangle {
-        vertex0 0 81.6 500
-        vertex1 0 0 500
+        vertex0 0 81.6 250
+        vertex1 0 0 250
         vertex2 0 0 0
     }
     
     MaterialIndex 3
     Triangle {
         vertex0 99 0 0
-        vertex1 99 0 500
-        vertex2 99 81.6 500
+        vertex1 99 0 250
+        vertex2 99 81.6 250
     }
     Triangle {
-        vertex0 99 81.6 500
+        vertex0 99 81.6 250
         vertex1 99 81.6 0
         vertex2 99 0 0
     }
 
-    MaterialIndex 2
+    MaterialIndex 12
     Triangle {
         vertex0 0 0 0
         vertex1 99 0 0
         vertex2 99 81.6 0
+        texture0 0 0
+        texture1 1 0
+        texture2 1 1
     }
     Triangle {
         vertex0 99 81.6 0
         vertex1 0 81.6 0
         vertex2 0 0 0
+        texture0 1 1
+        texture1 0 1
+        texture2 0 0
     }
 
     MaterialIndex 4
@@ -90,11 +119,17 @@ Group {
         vertex0 0 0 0
         vertex1 0 0 250
         vertex2 99 0 250
+        texture0 0 0
+        texture1 0 1
+        texture2 1 1
     }
     Triangle {
         vertex0 99 0 250
         vertex1 99 0 0
         vertex2 0 0 0
+        texture0 1 1
+        texture1 1 0
+        texture2 0 0
     }
     
     MaterialIndex 0
@@ -109,7 +144,7 @@ Group {
         vertex2 0 81.6 0
     }
 
-    MaterialIndex 0
+    MaterialIndex 2
     Triangle {
         vertex0 0 0 250
         vertex1 0 81.6 250
@@ -123,28 +158,64 @@ Group {
 
     MaterialIndex 5
     Sphere {
-        center 47 16.5 47
-        radius 16.5
+        center 70 10 50
+        radius 10
     }
 
     MaterialIndex 6
     Sphere {
-        center 73 16.5 60
-        radius 16.5
+        center 80 10 80
+        radius 10
     }
 
     MaterialIndex 6
     Transform {
-        UniformScale 15
-		Translate 20 10 85
+        YRotate 45
+        UniformScale 20
+		Translate 25 15 50
         TriangleMesh {
             obj_file mesh/fixed.perfect.dragon.100K.0.07.obj
         }
     }
 
     MaterialIndex 7
+    Transform {
+        XRotate 90
+        YRotate 180
+        Translate 47.5 10 75
+        Sphere {
+            center 0 0 0
+            radius 10
+        }
+    }
+
+    MaterialIndex 8
     Sphere {
-        center 50 681.33 81.6
+        center 50 681.33 90
         radius 600
+    }
+
+    MaterialIndex 9
+    Sphere {
+        center 15 5 90
+        radius 5
+    }
+
+    MaterialIndex 10
+    Sphere {
+        center 25 5 90
+        radius 5
+    }
+    
+    MaterialIndex 11
+    Sphere {
+        center 20 5 98.7
+        radius 5
+    }
+
+    MaterialIndex 6
+    Sphere {
+        center 20 13.2 92.9
+        radius 5
     }
 }

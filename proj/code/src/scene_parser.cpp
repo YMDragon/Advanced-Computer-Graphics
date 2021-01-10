@@ -418,7 +418,9 @@ Triangle *SceneParser::parseTriangle()
         getToken(token);
         assert(!strcmp(token, "}"));
         assert(current_material != nullptr);
-        return new Triangle(v0, v1, v2, t0, t1, t2, current_material);
+        Triangle *triangle = new Triangle(v0, v1, v2, current_material);
+        triangle->setTexture(t0, t1, t2);
+        return triangle;
     }
     else
     {

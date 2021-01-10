@@ -20,26 +20,26 @@ public:
 		vertices[0] = a;
 		vertices[1] = b;
 		vertices[2] = c;
-		abc = Vector3f::cross(b - a, c - a).length();
 		normal = Vector3f::cross(b - a, c - a).normalized();
+		abc = Vector3f::dot(Vector3f::cross(b - a, c - a), normal);
+		vnormal[0] = vnormal[1] = vnormal[2] = normal;
 		box.update(vertices[0]);
 		box.update(vertices[1]);
 		box.update(vertices[2]);
 	}
 
-	Triangle(const Vector3f &a, const Vector3f &b, const Vector3f &c, const Vector2f &ta, const Vector2f &tb, const Vector2f &tc, Material *m) : Object3D(m)
+	void setTexture(const Vector2f &ta, const Vector2f &tb, const Vector2f &tc)
 	{
-		vertices[0] = a;
-		vertices[1] = b;
-		vertices[2] = c;
 		textures[0] = ta;
 		textures[1] = tb;
 		textures[2] = tc;
-		normal = Vector3f::cross(b - a, c - a).normalized();
-		abc = Vector3f::dot(Vector3f::cross(b - a, c - a), normal);
-		box.update(vertices[0]);
-		box.update(vertices[1]);
-		box.update(vertices[2]);
+	}
+
+	void setNormal(const Vector3f &na, const Vector3f &nb, const Vector3f &nc)
+	{
+		vnormal[0] = na;
+		vnormal[1] = nb;
+		vnormal[2] = nc;
 	}
 
 	bool intersect(const Ray &r, Hit &h, double tmin) override
@@ -58,12 +58,14 @@ public:
 		if (pab < 0 || pbc < 0 || pca < 0)
 			return false;
 		Vector2f texture = (textures[0] * pbc + textures[1] * pca + textures[2] * pab) / abc;
-		h.set(t, material, normal, texture);
+		Vector3f normal_ = (vnormal[0] * pbc + vnormal[1] * pca + vnormal[2] * pab) / abc;
+		h.set(t, material, normal_, texture);
 		return true;
 	}
 
 	Vector3f normal;
 	Vector3f vertices[3];
+	Vector3f vnormal[3];
 	Vector2f textures[3];
 
 protected:

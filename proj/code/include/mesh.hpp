@@ -29,8 +29,10 @@ public:
 
     std::vector<Vector3f> v;
     std::vector<Vector2f> vt;
+    std::vector<Vector3f> vn;
     std::vector<TriangleIndex> f;
     std::vector<TriangleIndex> ft;
+    std::vector<TriangleIndex> fn;
     std::vector<Object3D *> V;
     bool intersect(const Ray &r, Hit &h, double tmin) override;
 

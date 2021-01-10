@@ -26,7 +26,7 @@ public:
 
     bool intersect(const Ray &r, Hit &h, double tmin) override
     {
-        if (V.size() <= 20)
+        if (V.size() <= 50)
         {
             bool res = false;
             for (auto obj : V)

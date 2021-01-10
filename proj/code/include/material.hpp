@@ -8,6 +8,7 @@
 #include "hit.hpp"
 #include "image.hpp"
 #include <iostream>
+#include <string.h>
 
 enum Type
 {
@@ -23,7 +24,15 @@ public:
     explicit Material(const Type type, const char *filename, const Vector3f &color = Vector3f::ZERO, const Vector3f &emission = Vector3f::ZERO, const double &rate = 1) : type(type), color(color), emission(emission), rate(rate)
     {
         if (filename[0] != 0)
-            texture = Image::LoadPPM(filename);
+        {
+            const char *ext = &filename[strlen(filename) - 4];
+            if (!strcmp(ext, ".tga"))
+                texture = Image::LoadTGA(filename);
+            else if (!strcmp(ext, ".ppm"))
+                texture = Image::LoadPPM(filename);
+            else
+                texture = NULL;
+        }
         else
             texture = NULL;
     }

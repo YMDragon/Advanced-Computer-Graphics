@@ -147,7 +147,7 @@ void Image::SavePPM(const char *filename) const
     // misc header information
     assert(file != NULL);
     fprintf(file, "P6\n");
-    fprintf(file, "# Creator: Image::SavePPM()\n");
+    //fprintf(file, "# Creator: Image::SavePPM()\n");
     fprintf(file, "%d %d\n", width, height);
     fprintf(file, "255\n");
     // the data
@@ -178,8 +178,8 @@ Image *Image::LoadPPM(const char *filename)
     char tmp[100];
     fgets(tmp, 100, file);
     assert(strstr(tmp, "P6"));
-    fgets(tmp, 100, file);
-    assert(tmp[0] == '#');
+    //fgets(tmp, 100, file);
+    //assert(tmp[0] == '#');
     fgets(tmp, 100, file);
     sscanf(tmp, "%d %d", &width, &height);
     fgets(tmp, 100, file);
